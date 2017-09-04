@@ -1,4 +1,4 @@
-from math import sqrt
+from math import sqrt,atan,log
 class ComplexNumber:
     """
     The class of complex numbers.
@@ -13,7 +13,12 @@ class ComplexNumber:
         """
         Return the string representation of self.
         """
-        return "%s + %s i"%(self.real, self.imaginary)
+        
+        if (self.imaginary>=0):
+            return "%s + %s i"%(self.real, self.imaginary)
+        else:
+            return "%s %s i"%(self.real, self.imaginary)
+        
     def __eq__(self, other):
         """
         Test if ``self`` equals ``other``.
@@ -36,6 +41,20 @@ class ComplexNumber:
         """
         return ComplexNumber(self.real + other.real, self.imaginary + other.imaginary)
 
+    def product(self, other):
+        """
+        Return the product of ``self`` and ``other``.
+        """
+        return ComplexNumber((self.real*other.real)-(self.imaginary*other.imaginary),(self.real*other.imaginary)+(self.imaginary*other.real))
+
+    def complex_conjugate(self):
+        """
+        replaces ``self`` by its complex conjugate
+        """
+        self.imaginary = -self.imaginary
+        ComplexNumber(self.real, self.imaginary)
+
+ 
 class NonZeroComplexNumber(ComplexNumber):
     def __init__(self, real_part, imaginary_part):
         """
@@ -50,3 +69,37 @@ class NonZeroComplexNumber(ComplexNumber):
         """
         den = self.real**2 + self.imaginary**2
         return NonZeroComplexNumber(self.real/den, -self.imaginary/den)
+
+    def polar_coordinates(self):
+        """
+        Returns polar coordinates of ``self``
+        """
+        r = self.modulus()
+        x=float(self.real)
+        y=float(self.imaginary)
+        
+        
+        if (x>0):
+            theta = atan(y/x)
+        elif (x<0 and y>=0):
+            theta=atan(y/x)+pi
+        elif (x<0 and y>0):
+            theta=atan(y/x)-pi
+        elif (x==0 and y>0):
+            theta = pi/2
+        elif (x==0 and y<0):
+            theta = -pi/2
+        return (r,theta)
+
+    def logarithm(self):
+        """
+        Returns the principal branch of the log
+        """
+        a,b = self.polar_coordinates()
+        return NonZeroComplexNumber(log(a),b)
+        
+    
+
+            
+
+    
